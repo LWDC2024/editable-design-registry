@@ -8,6 +8,8 @@ interface ProductCardProps {
   image?: string;
   title?: string;
   category?: string;
+  description?: string;
+  dimensions?: string;
   onEdit?: () => void;
   onDelete?: () => void;
   isNew?: boolean;
@@ -18,6 +20,8 @@ export const ProductCard = ({
   image,
   title = "",
   category = "",
+  description = "",
+  dimensions = "",
   onEdit,
   onDelete,
   isNew = false,
@@ -67,7 +71,15 @@ export const ProductCard = ({
       </CardHeader>
       <CardContent className="p-4">
         <h3 className="text-lg font-semibold">{title || "New Product"}</h3>
-        <p className="text-sm text-gray-500">{category || "No category"}</p>
+        <p className="text-sm text-gray-500 mb-2">{category || "No category"}</p>
+        {description && (
+          <p className="text-sm text-gray-600 line-clamp-2 mb-2">{description}</p>
+        )}
+        {dimensions && (
+          <p className="text-sm text-gray-500">
+            <span className="font-medium">Dimensions:</span> {dimensions}
+          </p>
+        )}
       </CardContent>
       {isNew && (
         <CardFooter className="p-4 pt-0">

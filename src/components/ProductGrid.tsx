@@ -1,13 +1,19 @@
 import { ProductCard } from "./ProductCard";
+import { ProductEditor } from "./ProductEditor";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, FileDown } from "lucide-react";
+import html2pdf from "html2pdf.js";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
   image?: string;
   title: string;
   category: string;
+  description?: string;
+  dimensions?: string;
 }
 
 export const ProductGrid = () => {
@@ -17,15 +23,64 @@ export const ProductGrid = () => {
       id: "1",
       title: "Sample Product",
       category: "Category 1",
+      description: "This is a sample product description",
+      dimensions: "100x200cm",
     },
   ]);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
 
   const handleEdit = (id?: string) => {
-    console.log("Edit product", id);
+    if (!id) {
+      setEditingProduct(null);
+      setIsEditorOpen(true);
+      return;
+    }
+    const product = products.find((p) => p.id === id);
+    if (product) {
+      setEditingProduct(product);
+      setIsEditorOpen(true);
+    }
   };
 
   const handleDelete = (id: string) => {
     setProducts(products.filter((p) => p.id !== id));
+    toast.success("Product deleted successfully!");
+  };
+
+  const handleSave = (product: Product) => {
+    if (product.id) {
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? product : p))
+      );
+    } else {
+      setProducts((prev) => [
+        ...prev,
+        { ...product, id: Math.random().toString(36).substr(2, 9) },
+      ]);
+    }
+    setIsEditorOpen(false);
+    setEditingProduct(null);
+  };
+
+  const exportToPDF = async () => {
+    const element = document.getElementById("product-grid");
+    if (!element) return;
+
+    const opt = {
+      margin: 1,
+      filename: "product-catalog.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    try {
+      await html2pdf().set(opt).from(element).save();
+      toast.success("PDF exported successfully!");
+    } catch (error) {
+      toast.error("Failed to export PDF");
+    }
   };
 
   const filteredProducts = products.filter(
@@ -46,8 +101,15 @@ export const ProductGrid = () => {
             className="pl-10"
           />
         </div>
+        <Button onClick={exportToPDF} className="flex items-center gap-2">
+          <FileDown className="h-4 w-4" />
+          Export PDF
+        </Button>
       </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        id="product-grid"
+        className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+      >
         <ProductCard isNew onEdit={() => handleEdit()} />
         {filteredProducts.map((product) => (
           <ProductCard
@@ -58,6 +120,16 @@ export const ProductGrid = () => {
           />
         ))}
       </div>
+      {isEditorOpen && (
+        <ProductEditor
+          product={editingProduct || undefined}
+          onSave={handleSave}
+          onClose={() => {
+            setIsEditorOpen(false);
+            setEditingProduct(null);
+          }}
+        />
+      )}
     </div>
   );
 };
