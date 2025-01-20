@@ -77,9 +77,9 @@ export const ProductGrid = () => {
 
     try {
       await html2pdf().set(opt).from(element).save();
-      toast.success("PDF exportado exitosamente!");
+      toast.success("Catálogo exportado exitosamente!");
     } catch (error) {
-      toast.error("Error al exportar PDF");
+      toast.error("Error al exportar el catálogo");
     }
   };
 
@@ -106,7 +106,7 @@ export const ProductGrid = () => {
           className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700"
         >
           <FileDown className="h-4 w-4" />
-          Exportar PDF
+          Exportar Catálogo
         </Button>
       </div>
       <div
