@@ -21,9 +21,9 @@ export const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([
     {
       id: "1",
-      title: "Sample Product",
-      category: "Category 1",
-      description: "This is a sample product description",
+      title: "Producto de Ejemplo",
+      category: "Categoría 1",
+      description: "Esta es una descripción de ejemplo del producto",
       dimensions: "100x200cm",
     },
   ]);
@@ -45,7 +45,7 @@ export const ProductGrid = () => {
 
   const handleDelete = (id: string) => {
     setProducts(products.filter((p) => p.id !== id));
-    toast.success("Product deleted successfully!");
+    toast.success("Producto eliminado exitosamente!");
   };
 
   const handleSave = (product: Product) => {
@@ -69,7 +69,7 @@ export const ProductGrid = () => {
 
     const opt = {
       margin: 1,
-      filename: "product-catalog.pdf",
+      filename: "catalogo-productos.pdf",
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2 },
       jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
@@ -77,9 +77,9 @@ export const ProductGrid = () => {
 
     try {
       await html2pdf().set(opt).from(element).save();
-      toast.success("PDF exported successfully!");
+      toast.success("PDF exportado exitosamente!");
     } catch (error) {
-      toast.error("Failed to export PDF");
+      toast.error("Error al exportar PDF");
     }
   };
 
@@ -93,17 +93,20 @@ export const ProductGrid = () => {
     <div className="container mx-auto p-4">
       <div className="mb-8 flex items-center gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-teal-600" />
           <Input
-            placeholder="Search products..."
+            placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-10 border-teal-600"
           />
         </div>
-        <Button onClick={exportToPDF} className="flex items-center gap-2">
+        <Button 
+          onClick={exportToPDF} 
+          className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700"
+        >
           <FileDown className="h-4 w-4" />
-          Export PDF
+          Exportar PDF
         </Button>
       </div>
       <div

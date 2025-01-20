@@ -10,6 +10,9 @@ interface ProductCardProps {
   category?: string;
   description?: string;
   dimensions?: string;
+  specifications?: {
+    [key: string]: string;
+  };
   onEdit?: () => void;
   onDelete?: () => void;
   isNew?: boolean;
@@ -22,6 +25,7 @@ export const ProductCard = ({
   category = "",
   description = "",
   dimensions = "",
+  specifications = {},
   onEdit,
   onDelete,
   isNew = false,
@@ -30,12 +34,12 @@ export const ProductCard = ({
 
   return (
     <Card
-      className="relative overflow-hidden transition-all duration-200 hover:shadow-lg"
+      className="relative overflow-hidden transition-all duration-200 hover:shadow-lg bg-teal-800 text-white"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <CardHeader className="p-0">
-        <div className="relative aspect-square w-full bg-gray-100">
+        <div className="relative aspect-square w-full bg-teal-700">
           {image ? (
             <img
               src={image}
@@ -44,7 +48,7 @@ export const ProductCard = ({
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <Plus className="h-12 w-12 text-gray-400" />
+              <Plus className="h-12 w-12 text-teal-300" />
             </div>
           )}
           {isHovered && !isNew && (
@@ -53,7 +57,7 @@ export const ProductCard = ({
                 variant="secondary"
                 size="icon"
                 onClick={onEdit}
-                className="h-10 w-10"
+                className="h-10 w-10 bg-teal-600 hover:bg-teal-700"
               >
                 <Edit2 className="h-5 w-5" />
               </Button>
@@ -70,14 +74,14 @@ export const ProductCard = ({
         </div>
       </CardHeader>
       <CardContent className="p-4">
-        <h3 className="text-lg font-semibold">{title || "New Product"}</h3>
-        <p className="text-sm text-gray-500 mb-2">{category || "No category"}</p>
+        <div className="text-xs text-teal-300 mb-1">{category || "Sin categoría"}</div>
+        <h3 className="text-lg font-semibold text-white">{title || "Nuevo Producto"}</h3>
         {description && (
-          <p className="text-sm text-gray-600 line-clamp-2 mb-2">{description}</p>
+          <p className="text-sm text-teal-100 line-clamp-2 mt-2">{description}</p>
         )}
         {dimensions && (
-          <p className="text-sm text-gray-500">
-            <span className="font-medium">Dimensions:</span> {dimensions}
+          <p className="text-sm text-teal-200 mt-2">
+            <span className="font-medium">Dimensiones:</span> {dimensions}
           </p>
         )}
       </CardContent>
@@ -85,9 +89,9 @@ export const ProductCard = ({
         <CardFooter className="p-4 pt-0">
           <Button
             onClick={onEdit}
-            className="w-full bg-primary hover:bg-primary-dark"
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white"
           >
-            Add New Product
+            Agregar Nuevo Producto
           </Button>
         </CardFooter>
       )}
